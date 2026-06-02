@@ -2,6 +2,9 @@
 
 An AI-powered document Q&A system built with Retrieval-Augmented Generation (RAG). Upload any PDF and ask questions — get grounded answers with source citations and a 3D knowledge map.
 
+## 🚀 Live Demo
+👉 [Try it here](https://rag-knowledge-assistant-3vltbfbtu6mzbgpbmrx4rb.streamlit.app)
+
 ![Python](https://img.shields.io/badge/Python-3.10+-blue) ![LlamaIndex](https://img.shields.io/badge/LlamaIndex-0.14-green) ![Streamlit](https://img.shields.io/badge/Streamlit-1.x-red)
 
 ## ✨ Features
@@ -62,4 +65,4 @@ Visit [console.groq.com](https://console.groq.com) to get a free API key.
 - Chandragiri Venkat Mourya
 - Allu Atchiyya Naidu
 
-NIT Silchar — Summer Internship 2024
+NIT Silchar — Summer Internship 2026
