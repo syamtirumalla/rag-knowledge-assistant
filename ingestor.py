@@ -13,7 +13,11 @@ def get_embed_model():
     return HuggingFaceEmbedding(model_name=EMBED_MODEL)
 
 def get_chroma_collection():
-    client = chromadb.PersistentClient(path=CHROMA_PATH)
+    import os
+    if os.environ.get("STREAMLIT_CLOUD") or not os.path.exists(CHROMA_PATH):
+        client = chromadb.EphemeralClient()
+    else:
+        client = chromadb.PersistentClient(path=CHROMA_PATH)
     collection = client.get_or_create_collection("rag_docs")
     return client, collection
 
