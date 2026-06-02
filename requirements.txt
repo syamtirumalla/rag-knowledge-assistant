@@ -8,7 +8,6 @@ plotly
 umap-learn
 pandas
 numpy
-torch
 sentence-transformers
 pypdf
 pymupdf
