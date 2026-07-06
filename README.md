@@ -46,7 +46,7 @@ streamlit run app.py
 ```
 
 ## 📁 Project Structure
-
+```bash
 rag-knowledge-assistant/
 ├── app.py              # Streamlit UI
 ├── ingestor.py         # PDF ingestion & ChromaDB indexing
@@ -55,7 +55,7 @@ rag-knowledge-assistant/
 ├── rag_pipeline.py     # End-to-end RAG pipeline
 ├── visualizer.py       # UMAP 3D knowledge map
 └── requirements.txt
-
+```
 ## 🔑 Get a Free Groq API Key
 Visit [console.groq.com](https://console.groq.com) to get a free API key.
 
