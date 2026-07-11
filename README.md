@@ -60,7 +60,7 @@ rag-knowledge-assistant/
 Visit [console.groq.com](https://console.groq.com) to get a free API key.
 
 ## 👥 Built By
-- Tirumalla Syam Narayana
+- Tirumalla Syam Narayana Kumar
 - K L S K Vinay
 - Chandragiri Venkat Mourya
 - Allu Atchiyya Naidu
