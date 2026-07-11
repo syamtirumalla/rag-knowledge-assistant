@@ -13,31 +13,65 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    .hero-title {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #1a1a2e;
+    .stApp { background-color: #0d0d0d; }
+    [data-testid="stSidebar"] {
+        background-color: #171717;
+        border-right: 1px solid #2a2a2a;
     }
-    .hero-sub {
-        color: #666;
-        font-size: 0.95rem;
-        margin-bottom: 1.5rem;
+    header[data-testid="stHeader"] { background: transparent; }
+    p, li, label, div { color: #ececec; }
+    h1, h2, h3 { color: #ffffff; }
+
+    [data-testid="stChatInput"] textarea {
+        background: #2a2a2a !important;
+        color: #ececec !important;
+        border-radius: 16px !important;
+        font-size: 15px !important;
+    }
+    [data-testid="stChatMessage"] {
+        background: transparent !important;
+        border: none !important;
     }
     .stButton > button {
+        background: #2a2a2a;
+        color: #ececec;
+        border: 1px solid #3a3a3a;
         border-radius: 8px;
-        font-weight: 600;
     }
-    .source-badge {
-        display: inline-block;
-        padding: 2px 10px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        margin-right: 6px;
+    .stButton > button[kind="primary"] {
+        background: #10a37f;
+        border-color: #10a37f;
+        color: white;
     }
-    .high   { background:#dcfce7; color:#16a34a; }
-    .medium { background:#fef9c3; color:#ca8a04; }
-    .low    { background:#fee2e2; color:#dc2626; }
+    [data-testid="stMetric"] {
+        background: #1a1a1a;
+        border-radius: 8px;
+        border: 1px solid #2a2a2a;
+        padding: 8px;
+    }
+    .stTabs [data-baseweb="tab-list"] {
+        background: #1a1a1a;
+        border-radius: 8px;
+        padding: 3px;
+    }
+    .stTabs [aria-selected="true"] {
+        background: #10a37f !important;
+        color: white !important;
+        border-radius: 6px;
+    }
+    .stTabs [data-baseweb="tab"] { color: #8e8ea0 !important; }
+    [data-testid="stExpander"] {
+        background: #1a1a1a;
+        border: 1px solid #2a2a2a !important;
+        border-radius: 8px;
+    }
+    hr { border-color: #2a2a2a !important; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #0d0d0d; }
+    ::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 3px; }
+    .badge-high   { background:#0a2e20; color:#10a37f; border:1px solid #10a37f; padding:2px 10px; border-radius:20px; font-size:11px; font-weight:600; display:inline-block; }
+    .badge-medium { background:#2e1f0a; color:#f0a500; border:1px solid #f0a500; padding:2px 10px; border-radius:20px; font-size:11px; font-weight:600; display:inline-block; }
+    .badge-low    { background:#2e0a0a; color:#f05050; border:1px solid #f05050; padding:2px 10px; border-radius:20px; font-size:11px; font-weight:600; display:inline-block; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -60,17 +94,14 @@ if not st.session_state.llm_ready:
     except Exception as e:
         st.error(f"LLM setup failed: {e}")
 
-# ── Sidebar ───────────────────────────────────────────────
 with st.sidebar:
-    st.image("https://img.icons8.com/fluency/96/brain.png", width=60)
-    st.title("RAG Assistant")
-    st.caption("Powered by LlamaIndex · Groq · ChromaDB")
+    st.markdown("### 🧠 RAG Assistant")
+    st.caption("LlamaIndex · Groq · ChromaDB")
     st.divider()
 
-    st.subheader("📂 Upload Documents")
+    st.markdown("**📂 Upload Documents**")
     uploaded_files = st.file_uploader(
-        "Upload PDFs",
-        type=["pdf"],
+        "Upload PDFs", type=["pdf"],
         accept_multiple_files=True,
         label_visibility="collapsed"
     )
@@ -78,7 +109,7 @@ with st.sidebar:
         for f in uploaded_files:
             with open(os.path.join("data", f.name), "wb") as out:
                 out.write(f.getbuffer())
-        st.success(f"✅ {len(uploaded_files)} file(s) uploaded")
+        st.success(f"✅ {len(uploaded_files)} file(s) ready")
 
     if st.button("⚡ Index Documents", use_container_width=True, type="primary"):
         with st.spinner("Indexing..."):
@@ -96,11 +127,11 @@ with st.sidebar:
                 st.error(msg)
 
     st.divider()
-    st.subheader("📊 Stats")
+    st.markdown("**📊 Stats**")
     doc_count = get_doc_count()
     col1, col2 = st.columns(2)
     col1.metric("Chunks", doc_count)
-    col2.metric("LLM", "🟢 On" if st.session_state.llm_ready else "🔴 Off")
+    col2.metric("LLM", "🟢" if st.session_state.llm_ready else "🔴")
 
     if st.session_state.index is None and doc_count > 0:
         st.session_state.index = load_existing_index()
@@ -110,30 +141,30 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-# ── Main ──────────────────────────────────────────────────
-st.markdown('<p class="hero-title">🧠 Knowledge Assistant</p>', unsafe_allow_html=True)
-st.markdown('<p class="hero-sub">Ask anything about your documents — grounded answers with cited sources</p>', unsafe_allow_html=True)
-
-tab1, tab2 = st.tabs(["💬 Chat", "🗺️ Knowledge Map"])
+# Main
+tab1, tab2 = st.tabs(["💬  Chat", "🗺️  Knowledge Map"])
 
 with tab1:
+    if not st.session_state.messages:
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align:center; color:#ececec'>What's on your mind today?</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align:center; color:#8e8ea0'>Upload a PDF and ask anything about it</p>", unsafe_allow_html=True)
+        st.markdown("<br><br>", unsafe_allow_html=True)
+
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
             if msg["role"] == "assistant" and "sources" in msg and msg["sources"]:
-                with st.expander(f"📎 {len(msg['sources'])} sources used"):
+                with st.expander(f"📎 {len(msg['sources'])} sources"):
                     for i, src in enumerate(msg["sources"], 1):
                         conf = src["confidence"]
-                        badge = f'<span class="source-badge {conf}">{conf.upper()}</span>'
-                        st.markdown(
-                            f'{badge} **{src["file"]}** · Page {src["page"]} · Score `{src["score"]}`',
-                            unsafe_allow_html=True
-                        )
+                        badge = f'<span class="badge-{conf}">{conf.upper()}</span>'
+                        st.markdown(f'{badge} &nbsp; **{src["file"]}** · Page {src["page"]} · Score `{src["score"]}`', unsafe_allow_html=True)
                         st.caption(src["text"][:300] + "...")
                         if i < len(msg["sources"]):
                             st.divider()
 
-    if prompt := st.chat_input("Ask a question about your documents..."):
+    if prompt := st.chat_input("Ask anything..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
@@ -144,20 +175,17 @@ with tab1:
                 st.markdown(answer)
                 st.session_state.messages.append({"role": "assistant", "content": answer})
             else:
-                with st.spinner("Searching knowledge base..."):
+                with st.spinner("Thinking..."):
                     answer, sources = query_with_sources(st.session_state.index, prompt)
                 if not answer:
                     answer = "I couldn't find relevant information for that question."
                 st.markdown(answer)
                 if sources:
-                    with st.expander(f"📎 {len(sources)} sources used"):
+                    with st.expander(f"📎 {len(sources)} sources"):
                         for i, src in enumerate(sources, 1):
                             conf = src["confidence"]
-                            badge = f'<span class="source-badge {conf}">{conf.upper()}</span>'
-                            st.markdown(
-                                f'{badge} **{src["file"]}** · Page {src["page"]} · Score `{src["score"]}`',
-                                unsafe_allow_html=True
-                            )
+                            badge = f'<span class="badge-{conf}">{conf.upper()}</span>'
+                            st.markdown(f'{badge} &nbsp; **{src["file"]}** · Page {src["page"]} · Score `{src["score"]}`', unsafe_allow_html=True)
                             st.caption(src["text"][:300] + "...")
                             if i < len(sources):
                                 st.divider()
@@ -168,12 +196,12 @@ with tab1:
                 })
 
 with tab2:
-    st.subheader("🗺️ 3D Knowledge Map")
-    st.caption("Each dot is a document chunk projected into 3D using UMAP. Hover to preview. Rotate to explore.")
+    st.markdown("### 🗺️ 3D Knowledge Map")
+    st.caption("Each dot is a document chunk in 3D space. Hover to preview. Rotate to explore.")
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("🔄 Generate Knowledge Map", use_container_width=True, type="primary"):
-            with st.spinner("Building 3D map..."):
+            with st.spinner("Building 3D map with UMAP..."):
                 fig, msg = build_3d_knowledge_map()
                 if fig:
                     st.plotly_chart(fig, use_container_width=True)

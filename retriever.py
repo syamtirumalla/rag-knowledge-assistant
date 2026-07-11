@@ -59,14 +59,21 @@ def query_with_sources(index, question: str, top_k: int = 5):
         messages=[
             {
                 "role": "system",
-                "content": "You are a helpful AI assistant. Answer ONLY using the provided context. Be concise — 3 to 5 sentences max. If the answer is not in the context, say 'I don't have enough information on that.'"
+                "content": """You are a helpful, thorough AI assistant. Answer using ONLY the provided context.
+- Give detailed, well-structured answers with clear explanations
+- Use bullet points or numbered lists when listing multiple items
+- Bold important terms using **term**
+- If the question has multiple parts, address each one
+- Add relevant context and explanation to make the answer genuinely useful
+- If the answer is not in the context, say 'I don't have enough information on that.'
+- Never make up information not present in the context"""
             },
             {
                 "role": "user",
                 "content": f"Context:\n{context}\n\nQuestion: {question}"
             }
         ],
-        max_tokens=512,
+        max_tokens=1024,
         temperature=0.1,
     )
 
