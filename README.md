@@ -64,5 +64,6 @@ Visit [console.groq.com](https://console.groq.com) to get a free API key.
 - K L S K Vinay
 - Chandragiri Venkat Mourya
 - Allu Atchiyya Naidu
+- Satti Hemanth Kumar
 
 NIT Silchar — Summer Internship 2026
