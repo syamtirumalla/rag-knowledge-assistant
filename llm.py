@@ -12,7 +12,7 @@ def setup_llm():
         raise ValueError("GROQ_API_KEY not found in .env file!")
     
     llm = Groq(
-        model="llama-3.1-70b-versatile",
+        model="qwen/qwen3.6-27b",
         api_key=api_key,
         temperature=0.1,
         max_tokens=1024,

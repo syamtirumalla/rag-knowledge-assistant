@@ -55,7 +55,7 @@ def query_with_sources(index, question: str, top_k: int = 5):
     
     client = groq_sdk.Groq(api_key=os.getenv("GROQ_API_KEY"))
     response = client.chat.completions.create(
-        model="llama-3.1-70b-versatile",
+        model="qwen/qwen3.6-27b",
         messages=[
             {
                 "role": "system",
