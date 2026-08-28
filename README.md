@@ -18,7 +18,7 @@ An AI-powered document Q&A system built with Retrieval-Augmented Generation (RAG
 | Layer | Technology |
 |-------|-----------|
 | Framework | LlamaIndex |
-| LLM | Groq (Llama 3.3 70B) |
+| LLM | Groq (GPT-OSS 20B) |
 | Embeddings | BAAI/bge-large-en-v1.5 |
 | Vector DB | ChromaDB |
 | Visualization | UMAP + Plotly |
